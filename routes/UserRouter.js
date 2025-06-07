@@ -27,16 +27,18 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-router.get("/checkLogin_name/:id", async (req, res) => {
+router.post("/checkLogin_name", async (req, res) => {
     try {
-        const user = await User.find({login_name : req.params.id}).exec();
+        const user = await User.find({login_name : req.body.login_name}).exec();
         if (user.length > 0) {
+            console.log("Login name exists");
             return res.send({ status: true });
         }
         return res.send({ status: false });
     } catch (err) {
         console.log(err);
     }
+
 });
 
 router.post("/addUser", async (req, res) => {
@@ -50,11 +52,11 @@ router.post("/addUser", async (req, res) => {
             description: req.body.description,
             occupation: req.body.occupation
         });
-        // await newUser.save();
-
-        console.log(newUser);
+        await newUser.save();
+        return res.send({ status: true});
+        // console.log(newUser);
     } catch (err) {
-
+        res.send({ status: false });
     }
 });
 
